@@ -11,6 +11,7 @@ public class closeInitDoor : MonoBehaviour
     [SerializeField] private float speed = 0.6f;
 
     private bool close = false;
+    private Manager manager;
 
     private void OnTriggerEnter(Collider other)
     {
@@ -26,6 +27,12 @@ public class closeInitDoor : MonoBehaviour
         {
              door.transform.position = Vector3.MoveTowards(door.transform.position, end, speed * Time.deltaTime);
              Debug.Log("me estas hacienedo caso");
+        }
+        if(door.transform.position == end)
+        {
+            manager = FindAnyObjectByType<Manager>();
+            moveEnemy ogre = FindAnyObjectByType<moveEnemy>();
+            manager.SetRespawnObject(ogre.gameObject, new Vector3(3.6f, 1.0f, -15.0f));
         }
     }
 }
