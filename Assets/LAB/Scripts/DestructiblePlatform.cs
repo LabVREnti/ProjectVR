@@ -9,6 +9,7 @@ public class DestructiblePlatform : MonoBehaviour
     [SerializeField] private float percentageToDestroyCompletly = 0.05f; // Porcentaje neceario para destuirse por completo.
     [SerializeField] private float reappearTime = 60f; // Tiempo para reaparecer despues de ser destruida.
     public float destructionPercentage = 0.85f; // Porcentaje de destruccion.
+    [SerializeField] private GameObject[] platformParts;
 
     // Variables solo para cuando está conectada a otra plataforma temproizada.
     [Header("Temporizated platforms")]
