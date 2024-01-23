@@ -10272,6 +10272,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Torch
       objectReference: {fileID: 0}
+    - target: {fileID: 2865218911771384475, guid: a00646ffdd0c8c94aab1d8cea35c7847, type: 3}
+      propertyPath: m_TagString
+      value: Torch
+      objectReference: {fileID: 0}
     - target: {fileID: 3208988216643092513, guid: a00646ffdd0c8c94aab1d8cea35c7847, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.5
@@ -12962,6 +12966,8 @@ MonoBehaviour:
   agent: {fileID: 1453852979}
   player: {fileID: 134019771}
   followAlways: 0
+  stunnedMat: {fileID: -8150458072921705705, guid: 46f7390b8a973f14db1682dc6a3600b1, type: 3}
+  initMat: {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
 --- !u!195 &1453852979
 NavMeshAgent:
   m_ObjectHideFlags: 0
