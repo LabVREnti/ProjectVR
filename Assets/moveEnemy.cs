@@ -16,19 +16,26 @@ public class moveEnemy : MonoBehaviour
 
     [SerializeField] Material stunnedMat;
     [SerializeField] Material initMat;
+
+    Animator anim;
+
+    private void Start()
+    {
+        anim = GetComponent<Animator>();
+    }
     void Update()
     {
         if(stunned)
         {
             follow = false;
             timer -= Time.deltaTime;
-            this.GetComponent<MeshRenderer>().material = initMat;
-            this.GetComponent<MeshRenderer>().material = stunnedMat;
+            //   this.GetComponent<MeshRenderer>().material = stunnedMat;
+            anim.SetBool("Die", true);
 
-            if(timer <= 0.0f) { 
+            if (timer <= 0.0f) { 
                 follow = true;
                 timer = 3.0f;
-                this.GetComponent<MeshRenderer>().material = initMat;
+            //    this.GetComponent<MeshRenderer>().material = initMat;
                 stunned = false;
             }
             Debug.Log("stunneado");
@@ -37,6 +44,7 @@ public class moveEnemy : MonoBehaviour
         if (follow)
         {
             agent.SetDestination(player.transform.position);
+            anim.SetBool("Walk", true);
         }
 
     }
@@ -48,6 +56,7 @@ public class moveEnemy : MonoBehaviour
             if (other.CompareTag("Player"))
             {
                 agent.SetDestination(other.transform.position);
+                anim.SetBool("Walk", true);
             }
         }
     }
