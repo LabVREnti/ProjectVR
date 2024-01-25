@@ -9,8 +9,11 @@ public class playerController : MonoBehaviour
     private Manager manager;
     private moveEnemy ogre;
 
+    int duckCount;
+
     private void Start()
     {
+        duckCount = 0;
         manager = FindObjectOfType<Manager>();
         ogre  = FindObjectOfType<moveEnemy>();
     }
@@ -27,5 +30,18 @@ public class playerController : MonoBehaviour
             manager.SetRespawnObject(collision.gameObject, new Vector3(3.6f, 1.0f, -15.0f));
 
         }
+    }
+
+    private void Update()
+    {
+        if(duckCount == 5)
+        {
+            Debug.Log("TODOS LOS PATITOS");
+        }
+    }
+
+    public void AddDuck()
+    {
+        duckCount++;
     }
 }

@@ -14,9 +14,6 @@ public class moveEnemy : MonoBehaviour
 
     float timer = 3.0f;
 
-    [SerializeField] Material stunnedMat;
-    [SerializeField] Material initMat;
-
     Animator anim;
 
     private void Start()
@@ -29,36 +26,43 @@ public class moveEnemy : MonoBehaviour
         {
             follow = false;
             timer -= Time.deltaTime;
-            //   this.GetComponent<MeshRenderer>().material = stunnedMat;
             anim.SetBool("Die", true);
 
             if (timer <= 0.0f) { 
                 follow = true;
                 timer = 3.0f;
-            //    this.GetComponent<MeshRenderer>().material = initMat;
                 stunned = false;
+                anim.SetBool("Walk", true);
             }
             Debug.Log("stunneado");
         }
         else { Debug.Log("vuelta al follow"); }
+
         if (follow)
         {
             agent.SetDestination(player.transform.position);
             anim.SetBool("Walk", true);
         }
 
+        if (followAlways)
+        {
+           
+            agent.SetDestination(player.transform.position);
+            anim.SetBool("Walk", true);
+            
+        }
     }
 
     private void OnTriggerStay(Collider other)
     {
-        if (followAlways)
+      /*  if (followAlways)
         {
             if (other.CompareTag("Player"))
             {
                 agent.SetDestination(other.transform.position);
                 anim.SetBool("Walk", true);
             }
-        }
+        }*/
     }
 
     private void OnCollisionEnter(Collision collision)
