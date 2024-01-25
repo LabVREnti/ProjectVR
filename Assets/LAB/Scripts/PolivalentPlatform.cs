@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PolivalentPlatform : MonoBehaviour
 {
-    [Tooltip("Original position")] [SerializeField] private Vector3 oPos;
+    private Vector3 oPos;
     [Tooltip("Final position")] [SerializeField] private Vector3 fPos;
     [Tooltip("Duration of displacement (origin to final)")] [SerializeField] private float dispDurationOToF = 2.0f;
     [Tooltip("Duration of displacement (final to origin)")] [SerializeField] private float dispDurationFToO = 2.0f;
@@ -22,6 +22,7 @@ public class PolivalentPlatform : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        oPos = transform.position;
         elapsedTime = 0.0f;
     }
 
@@ -71,6 +72,6 @@ public class PolivalentPlatform : MonoBehaviour
     void OnDrawGizmos()
     {
         Gizmos.color = Color.yellow;
-        Gizmos.DrawLine(oPos, fPos);
+        Gizmos.DrawLine(transform.position, fPos);
     }
 }
