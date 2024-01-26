@@ -17,8 +17,9 @@ public class PolivalentPlatform : MonoBehaviour
     [Tooltip("Final position")] [SerializeField] private bool isLavaPlatform = false;
     [Tooltip("Final position")] [SerializeField] private bool lavaPlatformActivated = false;
 
-    [Header("Player reference")]
+    [Header("Player and Ogre reference")]
     [Tooltip("Player reference")][SerializeField] private CharacterController player; // Variable to moves the player with the plarform
+    [Tooltip("Ogre reference")][SerializeField] private CharacterController ogre; // Variable to moves the player with the plarform
 
     [Header("Movement")]
     private Vector3 oPos;
@@ -29,6 +30,7 @@ public class PolivalentPlatform : MonoBehaviour
     [Tooltip("Time before move (final to origin)")] [SerializeField] private float waitTimeToMoveToOrigin = 3.0f;
     [Tooltip("Platform state")] [SerializeField] private PlatformState platformState;
     [Tooltip("Player has touched the platform?")] [SerializeField] private bool touchedByPlayer = false;
+    [Tooltip("Ogre has touched the platform?")] [SerializeField] private bool touchedByOgre = false;
     private float elapsedTime = 0.0f;
     private Vector3 prevPos; // Platform previous position
 
@@ -67,6 +69,21 @@ public class PolivalentPlatform : MonoBehaviour
             }
         }
 
+        if (touchedByOgre)
+        {
+            if (ogre != null)
+            {
+                if (platformState == PlatformState.TOFINAL || platformState == PlatformState.TOORIGIN)
+                {
+                    // Calcular el desplazamiento de la plataforma y la diferencia entre la posición actual y la anterior
+                    Vector3 displacement = transform.position - prevPos;
+
+                    // Mover al jugador con el mismo desplazamiento que la plataforma
+                    ogre.Move(displacement);
+                }
+            }
+        }
+
         // Actualizar la posición anterior de la plataforma con la posición actual
         prevPos = transform.position;
         #endregion
@@ -82,6 +99,15 @@ public class PolivalentPlatform : MonoBehaviour
                 lavaPlatformActivated = true;
             }
         }
+
+        if (collider.gameObject.CompareTag("Ogre"))
+        {
+            touchedByOgre = true;
+            if (isLavaPlatform && !lavaPlatformActivated)
+            {
+                lavaPlatformActivated = true;
+            }
+        }
     }
 
     void OnTriggerExit(Collider collider)
@@ -89,6 +115,11 @@ public class PolivalentPlatform : MonoBehaviour
         if (collider.gameObject.CompareTag("Player"))
         {
             touchedByPlayer = false;
+        }
+
+        if (collider.gameObject.CompareTag("Ogre"))
+        {
+            touchedByOgre = false;
         }
     }
 
