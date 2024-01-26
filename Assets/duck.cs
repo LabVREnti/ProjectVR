@@ -13,11 +13,18 @@ public class duck : MonoBehaviour
     }
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("Player"))
+       /* if (other.gameObject.CompareTag("Player"))
         {
             //Playear el sonido
             other.GetComponent<playerController>().AddDuck();
             this.enabled = false;
-        }
+        }*/
+    }
+
+    public void GrabDuck()
+    {
+        //Playear el sonido
+        player.AddDuck();
+        this.gameObject.SetActive(false);
     }
 }

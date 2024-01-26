@@ -69,7 +69,13 @@ PrefabInstance:
       addedObject: {fileID: 6168369645854671917}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 309d8a7e7d3640947817015916232fab, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 5080063523659445967}
+      addedObject: {fileID: 8239318769308002134}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 309d8a7e7d3640947817015916232fab, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6923897390129804757}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 309d8a7e7d3640947817015916232fab, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4042096354277198533}
   m_SourcePrefab: {fileID: 100100000, guid: 309d8a7e7d3640947817015916232fab, type: 3}
 --- !u!1 &1036666271858805678 stripped
 GameObject:
@@ -88,8 +94,110 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d66a73a727497dc48bac99a64f0fc6fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!65 &5080063523659445967
-BoxCollider:
+--- !u!114 &8239318769308002134
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1036666271858805678}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 822bc9090447b9c40833509c4a32e597, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ignoreMe: 0
+  body: {fileID: 6923897390129804757}
+  hightlightMaterial: {fileID: 0}
+  isGrabbable: 1
+  CopySettings: {fileID: 0}
+  grabType: 0
+  handType: 0
+  singleHandOnly: 0
+  allowHeldSwapping: 1
+  instantGrab: 0
+  useGentleGrab: 0
+  heldNoFriction: 1
+  maintainGrabOffset: 0
+  ignoreWeight: 0
+  parentOnGrab: 1
+  throwPower: 1
+  jointBreakForce: 3500
+  showAdvancedSettings: 1
+  makeChildrenGrabbable: 1
+  grabPriorityWeight: 1
+  ignoreReleaseTime: 0.5
+  maxHeldVelocity: 10
+  heldPositionOffset: {x: 0, y: 0, z: 0}
+  heldRotationOffset: {x: 0, y: 0, z: 0}
+  customGrabJoint: {fileID: 0}
+  jointedBodies: []
+  heldIgnoreColliders: []
+  pullApartBreakOnly: 1
+  showEvents: 1
+  onGrab:
+    m_PersistentCalls:
+      m_Calls: []
+  onRelease:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 6168369645854671917}
+        m_TargetAssemblyTypeName: duck, Assembly-CSharp
+        m_MethodName: GrabDuck
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  onSqueeze:
+    m_PersistentCalls:
+      m_Calls: []
+  onUnsqueeze:
+    m_PersistentCalls:
+      m_Calls: []
+  onHighlight:
+    m_PersistentCalls:
+      m_Calls: []
+  onUnhighlight:
+    m_PersistentCalls:
+      m_Calls: []
+  OnJointBreak:
+    m_PersistentCalls:
+      m_Calls: []
+  lockHandOnGrab: 0
+--- !u!54 &6923897390129804757
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1036666271858805678}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 1024
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!135 &4042096354277198533
+SphereCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -103,9 +211,9 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.014968571, y: 0.020045992, z: 0.008312907}
-  m_Center: {x: -0.0002217555, y: 0.0013937295, z: -0.00027739553}
+  m_Radius: 0.0048596086
+  m_Center: {x: 0.00000007392373, y: 0.0016289478, z: -0.00027739553}

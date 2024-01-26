@@ -18,8 +18,8 @@ public class PolivalentPlatform : MonoBehaviour
     [Tooltip("Final position")] [SerializeField] private bool lavaPlatformActivated = false;
 
     [Header("Player and Ogre reference")]
-    [Tooltip("Player reference")][SerializeField] private CharacterController player; // Variable to moves the player with the plarform
-    [Tooltip("Ogre reference")][SerializeField] private CharacterController ogre; // Variable to moves the player with the plarform
+    [Tooltip("Player reference")][SerializeField] private playerController player; // Variable to moves the player with the plarform
+    [Tooltip("Ogre reference")][SerializeField] private moveEnemy ogre; // Variable to moves the player with the plarform
 
     [Header("Movement")]
     private Vector3 oPos;
@@ -64,7 +64,7 @@ public class PolivalentPlatform : MonoBehaviour
                     Vector3 displacement = transform.position - prevPos;
 
                     // Mover al jugador con el mismo desplazamiento que la plataforma
-                    player.Move(displacement);
+                    player.GetComponent<Rigidbody>().AddForce(displacement);
                 }
             }
         }
@@ -79,7 +79,7 @@ public class PolivalentPlatform : MonoBehaviour
                     Vector3 displacement = transform.position - prevPos;
 
                     // Mover al jugador con el mismo desplazamiento que la plataforma
-                    ogre.Move(displacement);
+                    ogre.GetComponent<Rigidbody>().AddForce(displacement);
                 }
             }
         }
