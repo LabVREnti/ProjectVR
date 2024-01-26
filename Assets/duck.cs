@@ -16,6 +16,7 @@ public class duck : MonoBehaviour
         if (other.gameObject.CompareTag("Player"))
         {
             //Playear el sonido
+            other.GetComponent<playerController>().AddDuck();
             this.enabled = false;
         }
     }
