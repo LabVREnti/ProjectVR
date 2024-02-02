@@ -1,15 +1,26 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
-public class DestructiblePlatform : MonoBehaviour
+public class DestructiblePlatform : PolivalentPlatform
 {
-    [SerializeField] private bool isDestructibleOnContact = true; // Marcar para destruir al contacto con el jugador.
+    private enum DestructionState
+    {
+        NONE,
+        FASE1,
+        FASE2,
+        FASE3,
+        DESTROYED
+    }
+
+    [Header("Destructible platform variables")]
+    [SerializeField] private DestructionState destructionState = DestructionState.NONE; // Estado de la destruccion de la plataforma.
     [SerializeField] private float destructionTime = 10f; // Tiempo total para destruir la plataforma.
     [SerializeField] private float percentageToDestroyCompletly = 0.05f; // Porcentaje neceario para destuirse por completo.
-    [SerializeField] private float reappearTime = 60f; // Tiempo para reaparecer despues de ser destruida.
-    public float destructionPercentage = 0.85f; // Porcentaje de destruccion.
-    [SerializeField] private GameObject[] platformParts;
+    public float destructionPercentage = 0.0f; // Porcentaje de destruccion.
+
+    [SerializeField] private Transform[] platformParts;
 
     // Variables solo para cuando está conectada a otra plataforma temproizada.
     [Header("Temporizated platforms")]
@@ -20,13 +31,18 @@ public class DestructiblePlatform : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        destructionState = DestructionState.NONE;
 
+        platformParts = new Transform[transform.childCount];
+        for (int i = 0; i < transform.childCount; i++)
+        {
+            platformParts[i] = transform.GetChild(i);
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
-        
-        
+           
     }
 }

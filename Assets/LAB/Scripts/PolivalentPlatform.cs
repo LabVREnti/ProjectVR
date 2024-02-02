@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using UnityEngine;
 
 public class PolivalentPlatform : MonoBehaviour
@@ -17,9 +18,11 @@ public class PolivalentPlatform : MonoBehaviour
     [Tooltip("Final position")] [SerializeField] private bool isLavaPlatform = false;
     [Tooltip("Final position")] [SerializeField] private bool lavaPlatformActivated = false;
 
-    [Header("Player and Ogre reference")]
-    [Tooltip("Player reference")][SerializeField] private playerController player; // Variable to moves the player with the plarform
-    [Tooltip("Ogre reference")][SerializeField] private moveEnemy ogre; // Variable to moves the player with the plarform
+    //[Header("Player and Ogre reference")]
+    /*[Tooltip("Player reference")][SerializeField]*/
+    private playerController player; // Variable to moves the player with the plarform
+    /*[Tooltip("Ogre reference")][SerializeField]*/
+    private moveEnemy ogre; // Variable to moves the player with the plarform
 
     [Header("Movement")]
     private Vector3 oPos;
@@ -29,8 +32,8 @@ public class PolivalentPlatform : MonoBehaviour
     [Tooltip("Time before move (origin to final)")] [SerializeField] private float waitTimeToMoveToFinal = 3.0f;
     [Tooltip("Time before move (final to origin)")] [SerializeField] private float waitTimeToMoveToOrigin = 3.0f;
     [Tooltip("Platform state")] [SerializeField] private PlatformState platformState;
-    [Tooltip("Player has touched the platform?")] [SerializeField] private bool touchedByPlayer = false;
-    [Tooltip("Ogre has touched the platform?")] [SerializeField] private bool touchedByOgre = false;
+    /*[Tooltip("Player has touched the platform?")] [SerializeField]*/ private bool touchedByPlayer = false;
+    /*[Tooltip("Ogre has touched the platform?")] [SerializeField]*/ private bool touchedByOgre = false;
     private float elapsedTime = 0.0f;
     private Vector3 prevPos; // Platform previous position
 
@@ -41,6 +44,9 @@ public class PolivalentPlatform : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        if (player == null) player = FindObjectOfType<playerController>();
+        if (ogre == null) ogre = FindObjectOfType<moveEnemy>();
+
         oPos = transform.position;
         elapsedTime = 0.0f;
         platformState = PlatformState.WAITINGONORIGIN;
