@@ -3000,8 +3000,8 @@ MonoBehaviour:
   fPos: {x: 0, y: -3, z: 0}
   dispDurationToFinal: 10
   dispDurationToOrigin: 2
-  waitTimeToMoveToFinal: 3
-  waitTimeToMoveToOrigin: 30
+  waitTimeToStartToBreak: 3
+  waitTimeToRestore: 3
   platformState: 0
   predictionColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   destructionState: 0
