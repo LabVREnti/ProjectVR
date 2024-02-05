@@ -51,12 +51,19 @@ public class DestructiblePlatform : MonoBehaviour
     [Tooltip("Color of the predictive route line")][SerializeField] private Color predictionColor = Color.yellow;
 
     [Header("Destructible platform variables")]
+    [Tooltip("Platform destruction is active?")][SerializeField] private bool destroying = false;
     [SerializeField] private DestructionState destructionState = DestructionState.NONE; // Estado de la destruccion de la plataforma.
     [SerializeField] private float destructionTime = 10f; // Tiempo total para destruir la plataforma.
     [SerializeField] private float percentageToDestroyCompletly = 0.05f; // Porcentaje neceario para destuirse por completo.
     public float destructionPercentage = 0.0f; // Porcentaje de destruccion.
 
-    [SerializeField] private Transform[] platformParts;
+    [SerializeField] private List<Transform> platformParts;
+    private List<Vector3> platformPartsOriginalPos;
+    [SerializeField] private List<Transform> platPartsDestroyed;
+    [Tooltip("Gravity of the platform parts when has destroyed")][SerializeField] private Vector3 fakeGravity = new Vector3(0, -4, 0);
+    [Tooltip("Time since the platform part has destroyed for calculate the delay for destroy next part")]
+    [SerializeField] private float destructionElapsedTime = 0.0f;
+    [Tooltip("Delay between destroy platform parts")][SerializeField] private float destroyDelay = 0.5f;
 
     // Variables solo para cuando está conectada a otra plataforma temproizada.
     [Header("Temporizated platforms")]
@@ -76,11 +83,18 @@ public class DestructiblePlatform : MonoBehaviour
 
         destructionState = DestructionState.NONE;
 
-        platformParts = new Transform[transform.childCount];
         for (int i = 0; i < transform.childCount; i++)
         {
-            platformParts[i] = transform.GetChild(i);
+            platformParts.Add(transform.GetChild(i));
         }
+
+        foreach (Transform objetoTransform in platformParts)
+        {
+            // POR ALGUN MOTIVO ESTA PARTE NO FUNCIONA. ARREGLAR ESTO.
+            platformPartsOriginalPos.Add(objetoTransform.position);
+        }
+
+        destructionElapsedTime = destroyDelay;
     }
 
     // Update is called once per frame
@@ -119,6 +133,16 @@ public class DestructiblePlatform : MonoBehaviour
                     ogre.GetComponent<Rigidbody>().AddForce(displacement);
                 }
             }
+        }
+
+        if ((touchedByPlayer || touchedByOgre) && destructionState == DestructionState.NONE)
+        {
+            destroying = true;
+        }
+
+        if (destroying)
+        {
+            DestroyPlatform();
         }
 
         // Actualizar la posición anterior de la plataforma con la posición actual
@@ -167,7 +191,7 @@ public class DestructiblePlatform : MonoBehaviour
         Gizmos.DrawLine(transform.position, fPos);
     }
 
-    void PlatformMovement()
+    private void PlatformMovement()
     {
         switch (platformState)
         {
@@ -197,7 +221,7 @@ public class DestructiblePlatform : MonoBehaviour
         }
     }
 
-    void SlidingMovement(Vector3 origin, Vector3 destiny, float timeToDestiny)
+    private void SlidingMovement(Vector3 origin, Vector3 destiny, float timeToDestiny)
     {
         if (elapsedTime < timeToDestiny)
         {
@@ -230,7 +254,7 @@ public class DestructiblePlatform : MonoBehaviour
         }
     }
 
-    void PlatformWaitingToBeTouched(ref float timeToWait)
+    private void PlatformWaitingToBeTouched(ref float timeToWait)
     {
         float timeBackup = timeToWait;
         if (lavaPlatformActivated)
@@ -251,5 +275,73 @@ public class DestructiblePlatform : MonoBehaviour
                 }
             }
         }
+    }
+
+    private void DestroyPlatform()
+    {
+        switch (destructionState)
+        {
+            case DestructionState.NONE:
+                destructionState = DestructionState.FASE1;
+                break;
+
+            case DestructionState.FASE1:
+                destruction(2);
+                destructionState = DestructionState.FASE2;
+                break;
+
+            case DestructionState.FASE2:
+                destruction(1);
+                destructionState = DestructionState.FASE3;
+                break;
+
+            case DestructionState.FASE3:
+                destruction(0);
+                destructionState = DestructionState.DESTROYED;
+                break;
+
+            case DestructionState.DESTROYED:
+                for (int i = 0; i < platformPartsOriginalPos.Count; i++)
+                {
+                    platformParts[i].position = platformPartsOriginalPos[i];
+                }
+                platPartsDestroyed.Clear();
+                destroying = false;
+                destructionState = DestructionState.NONE;
+                break;
+        }
+    }
+
+    private void destruction(int remainingParts)
+    {
+        if (platformParts != null && platformParts.Count > 0)
+        {
+            int i = platformParts.Count / remainingParts + 1;
+            destructionElapsedTime += Time.fixedDeltaTime;
+            while (i >= 0)
+            {
+                if (destructionElapsedTime >= destroyDelay)
+                {
+                    destroyAndReturnPart().GetComponent<Rigidbody>().velocity += fakeGravity * Time.fixedDeltaTime;
+                    destructionElapsedTime = 0.0f;
+                    i--;
+                }
+            }
+        }
+    }
+
+    private Transform destroyAndReturnPart()
+    {
+        // Obtén un índice aleatorio dentro del rango del array
+        int aleatoryPart = Random.Range(0, platformParts.Count);
+
+        // Accede al Transform correspondiente al índice aleatorio
+        Transform platformPart = platformParts[aleatoryPart];
+
+        // Añadimos la parte al listado de partes destruídas y la eliminamos del que contiene las intactas
+        platPartsDestroyed.Add(platformPart);
+        platformParts.RemoveAt(aleatoryPart);
+
+        return platformPart;
     }
 }
