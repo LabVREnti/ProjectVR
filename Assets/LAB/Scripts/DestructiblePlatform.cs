@@ -160,8 +160,6 @@ public class DestructiblePlatform : MonoBehaviour
         {
             platformPartsOriginalPos.Add(objetoTransform.position);
         }
-
-        destructionElapsedTime = destroyDelay;
     }
 
     private void PlatformMovement()
@@ -300,6 +298,8 @@ public class DestructiblePlatform : MonoBehaviour
                     break;
 
                 case DestructionState.FASE1:
+                    destructionElapsedTime = destroyDelay; // La primera pieza ha de caer en cuanto empieza la fase 1
+
                     Destruction(2);
                     destructionState = DestructionState.FASE2;
                     break;
@@ -324,19 +324,28 @@ public class DestructiblePlatform : MonoBehaviour
 
     private void Destruction(int remainingParts)
     {
-        if (platformParts != null && platformParts.Count > 0)
+        // Esta parte no funciona bien. Se llama a cada iteración y eso da problemas. Idear alguna forma de que se llame
+        // a la función DropPartInTime después de que el tiempo haya pasado. La siguiente vez que pasa por aquí, detecta
+        // que ya hemos eliminado 1 pieza, pero no continúa eliminando el resto por que por algún motivo divide entre 0
+
+        if (platformParts is { Count: > 0 })
         {
             destructionElapsedTime += Time.fixedDeltaTime;
-            for (int i = 0; i < remainingParts; i++)
+            for (int i = 0; i < platformParts.Count/remainingParts + 1; i++)
             {
-                if (destructionElapsedTime >= destroyDelay)
-                {
-                    Transform platformPart = DestroyAndReturnPart();
-                    platformPart.GetComponent<Rigidbody>().velocity += fakeGravity * Time.fixedDeltaTime;
-                    platformPart.GetComponent<BoxCollider>().enabled = false;
-                    destructionElapsedTime = 0.0f;
-                }
+                DropPartInTime(destroyDelay);
             }
+        }
+    }
+
+    private void DropPartInTime(float delay)
+    {
+        if (destructionElapsedTime >= delay)
+        {
+            Transform platformPart = DestroyAndReturnPart();
+            platformPart.GetComponent<Rigidbody>().velocity += fakeGravity * Time.fixedDeltaTime;
+            platformPart.GetComponent<BoxCollider>().enabled = false;
+            destructionElapsedTime = 0.0f;
         }
     }
 
