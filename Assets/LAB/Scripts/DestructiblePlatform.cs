@@ -74,28 +74,9 @@ public class DestructiblePlatform : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        if (player == null) player = FindObjectOfType<playerController>();
-        if (ogre == null) ogre = FindObjectOfType<moveEnemy>();
+        GetPlayerAndOgre();
 
-        oPos = transform.position;
-        elapsedTime = 0.0f;
-        platformState = PlatformState.WAITINGONORIGIN;
-
-        destructionState = DestructionState.NONE;
-
-        for (int i = 0; i < transform.childCount; i++)
-        {
-            platformParts.Add(transform.GetChild(i));
-        }
-
-        platformPartsOriginalPos = new List<Vector3>();
-
-        foreach (Transform objetoTransform in platformParts)
-        {
-            platformPartsOriginalPos.Add(objetoTransform.position);
-        }
-
-        destructionElapsedTime = destroyDelay;
+        InitPlatform();
     }
 
     // Update is called once per frame
@@ -105,50 +86,12 @@ public class DestructiblePlatform : MonoBehaviour
 
         PlatformMovement();
 
-        #region Collision actions
-        if (touchedByPlayer)
-        {
-            if (player != null)
-            {
-                if (platformState == PlatformState.TOFINAL || platformState == PlatformState.TOORIGIN)
-                {
-                    // Calcular el desplazamiento de la plataforma y la diferencia entre la posición actual y la anterior
-                    Vector3 displacement = transform.position - prevPos;
+        OnCollisionActions();
 
-                    // Mover al jugador con el mismo desplazamiento que la plataforma
-                    player.GetComponent<Rigidbody>().AddForce(displacement);
-                }
-            }
-        }
-
-        if (touchedByOgre)
-        {
-            if (ogre != null)
-            {
-                if (platformState == PlatformState.TOFINAL || platformState == PlatformState.TOORIGIN)
-                {
-                    // Calcular el desplazamiento de la plataforma y la diferencia entre la posición actual y la anterior
-                    Vector3 displacement = transform.position - prevPos;
-
-                    // Mover al jugador con el mismo desplazamiento que la plataforma
-                    ogre.GetComponent<Rigidbody>().AddForce(displacement);
-                }
-            }
-        }
-
-        if ((touchedByPlayer || touchedByOgre) && destructionState == DestructionState.NONE)
-        {
-            destroying = true;
-        }
-
-        if (destroying)
-        {
-            DestroyPlatform();
-        }
+        DestroyPlatform();
 
         // Actualizar la posición anterior de la plataforma con la posición actual
         prevPos = transform.position;
-        #endregion
     }
 
     void OnTriggerEnter(Collider collider)
@@ -192,6 +135,35 @@ public class DestructiblePlatform : MonoBehaviour
         Gizmos.DrawLine(transform.position, fPos);
     }
 
+    private void GetPlayerAndOgre()
+    {
+        if (player == null) player = FindObjectOfType<playerController>();
+        if (ogre == null) ogre = FindObjectOfType<moveEnemy>();
+    }
+
+    private void InitPlatform()
+    {
+        oPos = transform.position;
+        elapsedTime = 0.0f;
+        platformState = PlatformState.WAITINGONORIGIN;
+
+        destructionState = DestructionState.NONE;
+
+        for (int i = 0; i < transform.childCount; i++)
+        {
+            platformParts.Add(transform.GetChild(i));
+        }
+
+        platformPartsOriginalPos = new List<Vector3>();
+
+        foreach (Transform objetoTransform in platformParts)
+        {
+            platformPartsOriginalPos.Add(objetoTransform.position);
+        }
+
+        destructionElapsedTime = destroyDelay;
+    }
+
     private void PlatformMovement()
     {
         switch (platformState)
@@ -202,6 +174,7 @@ public class DestructiblePlatform : MonoBehaviour
 
             case PlatformState.TOORIGIN:
                 SlidingMovement(fPos, oPos, dispDurationToOrigin);
+                destructionState = DestructionState.DESTROYED;
                 break;
 
             case PlatformState.WAITINGONORIGIN:
@@ -278,42 +251,78 @@ public class DestructiblePlatform : MonoBehaviour
         }
     }
 
-    private void DestroyPlatform()
+    private void OnCollisionActions()
     {
-        switch (destructionState)
+        if (touchedByPlayer)
         {
-            case DestructionState.NONE:
-                destructionState = DestructionState.FASE1;
-                break;
-
-            case DestructionState.FASE1:
-                destruction(2);
-                destructionState = DestructionState.FASE2;
-                break;
-
-            case DestructionState.FASE2:
-                destruction(1);
-                destructionState = DestructionState.FASE3;
-                break;
-
-            case DestructionState.FASE3:
-                destruction(0);
-                destructionState = DestructionState.DESTROYED;
-                break;
-
-            case DestructionState.DESTROYED:
-                for (int i = 0; i < platformPartsOriginalPos.Count; i++)
+            if (player != null)
+            {
+                if (platformState == PlatformState.TOFINAL || platformState == PlatformState.TOORIGIN)
                 {
-                    platformParts[i].position = platformPartsOriginalPos[i];
+                    // Calcular el desplazamiento de la plataforma y la diferencia entre la posición actual y la anterior
+                    Vector3 displacement = transform.position - prevPos;
+
+                    // Mover al jugador con el mismo desplazamiento que la plataforma
+                    player.GetComponent<Rigidbody>().AddForce(displacement);
                 }
-                platPartsDestroyed.Clear();
-                destroying = false;
-                destructionState = DestructionState.NONE;
-                break;
+            }
+        }
+
+        if (touchedByOgre)
+        {
+            if (ogre != null)
+            {
+                if (platformState == PlatformState.TOFINAL || platformState == PlatformState.TOORIGIN)
+                {
+                    // Calcular el desplazamiento de la plataforma y la diferencia entre la posición actual y la anterior
+                    Vector3 displacement = transform.position - prevPos;
+
+                    // Mover al jugador con el mismo desplazamiento que la plataforma
+                    ogre.GetComponent<Rigidbody>().AddForce(displacement);
+                }
+            }
+        }
+
+        if ((touchedByPlayer || touchedByOgre) && destructionState == DestructionState.NONE)
+        {
+            destructionState = DestructionState.FASE1;
+            destroying = true;
         }
     }
 
-    private void destruction(int remainingParts)
+    private void DestroyPlatform()
+    {
+        if (destroying)
+        {
+            switch (destructionState)
+            {
+                case DestructionState.NONE:
+                    break;
+
+                case DestructionState.FASE1:
+                    Destruction(2);
+                    destructionState = DestructionState.FASE2;
+                    break;
+
+                case DestructionState.FASE2:
+                    Destruction(1);
+                    destructionState = DestructionState.FASE3;
+                    break;
+
+                case DestructionState.FASE3:
+                    Destruction(0);
+                    break;
+
+                case DestructionState.DESTROYED:
+                    RecoverPlatform();
+                    destroying = false;
+                    destructionState = DestructionState.NONE;
+                    break;
+            }
+        }
+    }
+
+    private void Destruction(int remainingParts)
     {
         if (platformParts != null && platformParts.Count > 0)
         {
@@ -322,14 +331,16 @@ public class DestructiblePlatform : MonoBehaviour
             {
                 if (destructionElapsedTime >= destroyDelay)
                 {
-                    destroyAndReturnPart().GetComponent<Rigidbody>().velocity += fakeGravity * Time.fixedDeltaTime;
+                    Transform platformPart = DestroyAndReturnPart();
+                    platformPart.GetComponent<Rigidbody>().velocity += fakeGravity * Time.fixedDeltaTime;
+                    platformPart.GetComponent<BoxCollider>().enabled = false;
                     destructionElapsedTime = 0.0f;
                 }
             }
         }
     }
 
-    private Transform destroyAndReturnPart()
+    private Transform DestroyAndReturnPart()
     {
         // Obtén un índice aleatorio dentro del rango del array
         int aleatoryPart = Random.Range(0, platformParts.Count);
@@ -342,5 +353,20 @@ public class DestructiblePlatform : MonoBehaviour
         platformParts.RemoveAt(aleatoryPart);
 
         return platformPart;
+    }
+
+    private void RecoverPlatform()
+    {
+        platformParts.Clear();
+        platformParts = platPartsDestroyed;
+
+        for (int i = 0; i < platformPartsOriginalPos.Count; i++)
+        {
+            platformParts[i].position = platformPartsOriginalPos[i];
+            platformParts[i].GetComponent<BoxCollider>().enabled = true;
+        }
+
+        platPartsDestroyed.Clear();
+        platPartsDestroyed = new List<Transform>();
     }
 }
