@@ -88,9 +88,10 @@ public class DestructiblePlatform : MonoBehaviour
             platformParts.Add(transform.GetChild(i));
         }
 
+        platformPartsOriginalPos = new List<Vector3>();
+
         foreach (Transform objetoTransform in platformParts)
         {
-            // POR ALGUN MOTIVO ESTA PARTE NO FUNCIONA. ARREGLAR ESTO.
             platformPartsOriginalPos.Add(objetoTransform.position);
         }
 
