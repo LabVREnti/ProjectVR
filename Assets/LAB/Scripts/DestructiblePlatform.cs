@@ -317,15 +317,13 @@ public class DestructiblePlatform : MonoBehaviour
     {
         if (platformParts != null && platformParts.Count > 0)
         {
-            int i = platformParts.Count / remainingParts + 1;
             destructionElapsedTime += Time.fixedDeltaTime;
-            while (i >= 0)
+            for (int i = 0; i < remainingParts; i++)
             {
                 if (destructionElapsedTime >= destroyDelay)
                 {
                     destroyAndReturnPart().GetComponent<Rigidbody>().velocity += fakeGravity * Time.fixedDeltaTime;
                     destructionElapsedTime = 0.0f;
-                    i--;
                 }
             }
         }
