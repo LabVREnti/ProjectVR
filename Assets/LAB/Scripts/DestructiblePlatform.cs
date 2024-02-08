@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 public class DestructiblePlatform : MonoBehaviour
@@ -16,114 +15,70 @@ public class DestructiblePlatform : MonoBehaviour
     private enum DestructionState
     {
         NONE,
-        FASE1,
-        FASE2,
-        FASE3,
+        DESTROYING,
         DESTROYED
     }
 
     [Header("Platform Type")]
-    [Tooltip("Final position")][SerializeField] private bool isLavaPlatform = false;
-    [Tooltip("Final position")][SerializeField] private bool lavaPlatformActivated = false;
+    [SerializeField] private bool isLavaPlatform = false;
+    [SerializeField] private bool lavaPlatformActivated = false;
 
-    //[Header("Player and Ogre reference")]
-    /*[Tooltip("Player reference")][SerializeField]*/
-    private playerController player; // Variable to moves the player with the plarform
-    /*[Tooltip("Ogre reference")][SerializeField]*/
-    private moveEnemy ogre; // Variable to moves the player with the plarform
+    private playerController player;
+    private moveEnemy ogre;
 
     [Header("Movement")]
     private Vector3 oPos;
-    [Tooltip("Final position")][SerializeField] private Vector3 fPos;
-    [Tooltip("Duration of displacement (origin to final)")][SerializeField] private float dispDurationToFinal = 2.0f;
-    [Tooltip("Duration of displacement (final to origin)")][SerializeField] private float dispDurationToOrigin = 2.0f;
-    [Tooltip("Time before move (origin to final)")][SerializeField] private float waitTimeToMoveToFinal = 3.0f;
-    [Tooltip("Time before move (final to origin)")][SerializeField] private float waitTimeToMoveToOrigin = 3.0f;
-    [Tooltip("Platform state")][SerializeField] private PlatformState platformState;
-    /*[Tooltip("Player has touched the platform?")] [SerializeField]*/
+    [SerializeField] private Vector3 fPos;
+    [SerializeField] private float dispDurationToFinal = 2.0f;
+    [SerializeField] private float dispDurationToOrigin = 2.0f;
+    [SerializeField] private float waitTimeToMoveToFinal = 3.0f;
+    [SerializeField] private float waitTimeToMoveToOrigin = 3.0f;
+    private float originalWaitTimeToMoveToFinal;
+    private float originalWaitTimeToMoveToOrigin;
+    [SerializeField] private PlatformState platformState;
     private bool touchedByPlayer = false;
-    /*[Tooltip("Ogre has touched the platform?")] [SerializeField]*/
     private bool touchedByOgre = false;
     private float elapsedTime = 0.0f;
-    private Vector3 prevPos; // Platform previous position
+    private Vector3 prevPos;
 
     [Header("Route prediction")]
-    [Tooltip("Color of the predictive route line")][SerializeField] private Color predictionColor = Color.yellow;
+    [SerializeField] private Color predictionColor = Color.yellow;
 
     [Header("Destructible platform variables")]
-    [SerializeField] private DestructionState destructionState = DestructionState.NONE; // Estado de la destruccion de la plataforma.
-    [SerializeField] private float destructionTime = 10f; // Tiempo total para destruir la plataforma.
-    [SerializeField] private float percentageToDestroyCompletly = 0.05f; // Porcentaje neceario para destuirse por completo.
-    public float destructionPercentage = 0.0f; // Porcentaje de destruccion.
+    [SerializeField] private bool destroying = false;
+    [SerializeField] private DestructionState destructionState = DestructionState.NONE;
+    [SerializeField] private float destructionTime = 10f;
+    [SerializeField] private float percentageToDestroyCompletly = 0.05f;
+    public float destructionPercentage = 0.0f;
 
-    [SerializeField] private Transform[] platformParts;
+    [SerializeField] private List<Transform> platformParts;
+    private List<Vector3> platformPartsOriginalPos;
+    [SerializeField] private List<Transform> platPartsDestroyed;
+    [SerializeField] private Vector3 fakeGravity = new Vector3(0, -4, 0);
+    [SerializeField] private float destructionElapsedTime = 0.0f;
+    [SerializeField] private float destroyDelay = 0.5f;
 
-    // Variables solo para cuando está conectada a otra plataforma temproizada.
     [Header("Temporizated platforms")]
-    [SerializeField] private GameObject prevPlatform; // Plataforma previa a la actual.
-    [SerializeField] private bool isTemporizated = false; // Marcar para destruir despues de que la plataforma previa cumpla un porcentaje.
-    public float prevPlatDestructionPercentage = 0.85f; // Porcentaje de destrucción de la anterior plataforma, necesario para comenzar la destruccion.
+    [SerializeField] private GameObject prevPlatform;
+    [SerializeField] private bool isTemporizated = false;
+    public float prevPlatDestructionPercentage = 0.85f;
 
-    // Start is called before the first frame update
     void Start()
     {
-        if (player == null) player = FindObjectOfType<playerController>();
-        if (ogre == null) ogre = FindObjectOfType<moveEnemy>();
-
-        oPos = transform.position;
-        elapsedTime = 0.0f;
-        platformState = PlatformState.WAITINGONORIGIN;
-
-        destructionState = DestructionState.NONE;
-
-        platformParts = new Transform[transform.childCount];
-        for (int i = 0; i < transform.childCount; i++)
-        {
-            platformParts[i] = transform.GetChild(i);
-        }
+        GetPlayerAndOgre();
+        InitPlatform();
     }
 
-    // Update is called once per frame
     void FixedUpdate()
     {
         elapsedTime += Time.fixedDeltaTime;
+        destructionElapsedTime += Time.fixedDeltaTime;
 
         PlatformMovement();
+        OnCollisionActions();
+        DestroyPlatform();
 
-        #region Collision actions
-        if (touchedByPlayer)
-        {
-            if (player != null)
-            {
-                if (platformState == PlatformState.TOFINAL || platformState == PlatformState.TOORIGIN)
-                {
-                    // Calcular el desplazamiento de la plataforma y la diferencia entre la posición actual y la anterior
-                    Vector3 displacement = transform.position - prevPos;
-
-                    // Mover al jugador con el mismo desplazamiento que la plataforma
-                    player.GetComponent<Rigidbody>().AddForce(displacement);
-                }
-            }
-        }
-
-        if (touchedByOgre)
-        {
-            if (ogre != null)
-            {
-                if (platformState == PlatformState.TOFINAL || platformState == PlatformState.TOORIGIN)
-                {
-                    // Calcular el desplazamiento de la plataforma y la diferencia entre la posición actual y la anterior
-                    Vector3 displacement = transform.position - prevPos;
-
-                    // Mover al jugador con el mismo desplazamiento que la plataforma
-                    ogre.GetComponent<Rigidbody>().AddForce(displacement);
-                }
-            }
-        }
-
-        // Actualizar la posición anterior de la plataforma con la posición actual
         prevPos = transform.position;
-        #endregion
     }
 
     void OnTriggerEnter(Collider collider)
@@ -160,14 +115,41 @@ public class DestructiblePlatform : MonoBehaviour
         }
     }
 
-    // Draw line from oPosition to fPosition
     void OnDrawGizmos()
     {
         Gizmos.color = Color.yellow;
         Gizmos.DrawLine(transform.position, fPos);
     }
 
-    void PlatformMovement()
+    private void GetPlayerAndOgre()
+    {
+        if (player == null) player = FindObjectOfType<playerController>();
+        if (ogre == null) ogre = FindObjectOfType<moveEnemy>();
+    }
+
+    private void InitPlatform()
+    {
+        oPos = transform.position;
+        elapsedTime = 0.0f;
+        platformState = PlatformState.WAITINGONORIGIN;
+        destructionState = DestructionState.NONE;
+        
+        // Almacenar los valores originales de los tiempos de espera
+        originalWaitTimeToMoveToFinal = waitTimeToMoveToFinal;
+        originalWaitTimeToMoveToOrigin = waitTimeToMoveToOrigin;
+
+        platformParts.Clear();
+        platformPartsOriginalPos = new List<Vector3>();
+
+        for (int i = 0; i < transform.childCount; i++)
+        {
+            Transform child = transform.GetChild(i);
+            platformParts.Add(child);
+            platformPartsOriginalPos.Add(child.position);
+        }
+    }
+
+    private void PlatformMovement()
     {
         switch (platformState)
         {
@@ -177,39 +159,33 @@ public class DestructiblePlatform : MonoBehaviour
 
             case PlatformState.TOORIGIN:
                 SlidingMovement(fPos, oPos, dispDurationToOrigin);
+                destructionState = DestructionState.DESTROYED;
                 break;
 
             case PlatformState.WAITINGONORIGIN:
                 if (!isLavaPlatform) { platformState = PlatformState.TOFINAL; }
-                else
-                {
-                    PlatformWaitingToBeTouched(ref waitTimeToMoveToFinal);
+                else { 
+                    PlatformWaitingToBeMoved(ref waitTimeToMoveToFinal);
+                    if (!destroying) { destructionState = DestructionState.NONE; }
                 }
                 break;
 
             case PlatformState.WAITINGONFINAL:
                 if (!isLavaPlatform) { platformState = PlatformState.TOORIGIN; }
-                else
-                {
-                    PlatformWaitingToBeTouched(ref waitTimeToMoveToOrigin);
-                }
+                else { PlatformWaitingToBeMoved(ref waitTimeToMoveToOrigin); }
                 break;
         }
     }
 
-    void SlidingMovement(Vector3 origin, Vector3 destiny, float timeToDestiny)
+    private void SlidingMovement(Vector3 origin, Vector3 destiny, float timeToDestiny)
     {
         if (elapsedTime < timeToDestiny)
         {
-            // Calculate completed percentage
             float completed = elapsedTime / timeToDestiny;
-
-            // Lineal interpolation between start and final positions
             transform.position = Vector3.Lerp(origin, destiny, completed);
         }
         else
         {
-            // Movement finished
             transform.position = destiny;
             elapsedTime = 0.0f;
 
@@ -221,35 +197,141 @@ public class DestructiblePlatform : MonoBehaviour
             else if (platformState == PlatformState.TOORIGIN)
             {
                 if (!isLavaPlatform) platformState = PlatformState.TOFINAL;
-                else
-                {
-                    platformState = PlatformState.WAITINGONORIGIN;
-                    lavaPlatformActivated = false;
-                }
+                else { platformState = PlatformState.WAITINGONORIGIN; lavaPlatformActivated = false; }
             }
         }
     }
 
-    void PlatformWaitingToBeTouched(ref float timeToWait)
+    private void PlatformWaitingToBeMoved(ref float timeToWait)
     {
         float timeBackup = timeToWait;
         if (lavaPlatformActivated)
         {
             timeToWait -= Time.fixedDeltaTime;
-            if (timeToWait <= 0.0f)
+            if (timeToWait < 0.0f)
             {
                 elapsedTime = 0.0f;
-                if (platformState == PlatformState.WAITINGONORIGIN)
+                if (platformState == PlatformState.WAITINGONORIGIN) platformState = PlatformState.TOFINAL;
+                else if (platformState == PlatformState.WAITINGONFINAL) platformState = PlatformState.TOORIGIN;
+                timeToWait = timeBackup;
+            }
+        }
+    }
+
+    private void OnCollisionActions()
+    {
+        Vector3 displacement = Vector3.zero;
+        if (touchedByPlayer || touchedByOgre)
+        {
+            displacement = transform.position - prevPos;
+        }
+
+        if (touchedByPlayer)
+        {
+            if (player != null)
+            {
+                if (platformState is PlatformState.TOFINAL or PlatformState.TOORIGIN)
                 {
-                    timeToWait = timeBackup;
-                    platformState = PlatformState.TOFINAL;
-                }
-                else if (platformState == PlatformState.WAITINGONFINAL)
-                {
-                    timeToWait = timeBackup;
-                    platformState = PlatformState.TOORIGIN;
+                    player.GetComponent<Rigidbody>().AddForce(displacement);
                 }
             }
+        }
+
+        if (touchedByOgre)
+        {
+            if (ogre != null)
+            {
+                if (platformState is PlatformState.TOFINAL or PlatformState.TOORIGIN)
+                {
+                    ogre.GetComponent<Rigidbody>().AddForce(displacement);
+                }
+            }
+        }
+
+        if ((touchedByPlayer || touchedByOgre) && destructionState == DestructionState.NONE)
+        {
+            destructionState = DestructionState.DESTROYING;
+            destroying = true;
+        }
+    }
+
+    private void DestroyPlatform()
+    {
+        if (destroying)
+        {
+            switch (destructionState)
+            {
+                case DestructionState.NONE:
+                    break;
+
+                case DestructionState.DESTROYING:
+                    Destruction();
+                    break;
+
+                case DestructionState.DESTROYED:
+                    if (platformParts.Count == 0) // Asegurarse de que todas las partes se hayan destruido antes de recuperar la plataforma
+                    {
+                        RecoverPlatform();
+                        destroying = false;
+                    }
+                    break;
+            }
+        }
+    }
+
+    private void Destruction()
+    {
+        if (platformParts.Count > 0)
+        {
+            DropPartInTime(destroyDelay);
+        }
+    }
+
+    private void DropPartInTime(float delay)
+    {
+        if (destructionElapsedTime >= delay)
+        {
+            Transform platformPart = DropAndReturnPart();
+            platformPart.GetComponent<Rigidbody>().velocity += fakeGravity * Time.fixedDeltaTime;
+            destructionElapsedTime = 0.0f;
+        }
+    }
+
+    private Transform DropAndReturnPart()
+    {
+        int aleatoryPart = Random.Range(0, platformParts.Count);
+        Transform platformPart = platformParts[aleatoryPart];
+        platPartsDestroyed.Add(platformPart);
+        platformParts.RemoveAt(aleatoryPart);
+
+        return platformPart;
+    }
+
+    private void RecoverPlatform()
+    {
+        // Restaurar la posición original de la plataforma
+        transform.position = oPos;
+
+        // Restablecer los estados y tiempos de espera
+        elapsedTime = 0.0f;
+        destructionElapsedTime = 0.0f;
+        platformState = PlatformState.WAITINGONORIGIN;
+        lavaPlatformActivated = false;
+
+        // Restaurar los tiempos de espera originales
+        waitTimeToMoveToFinal = originalWaitTimeToMoveToFinal;
+        waitTimeToMoveToOrigin = originalWaitTimeToMoveToOrigin;
+
+        // Limpiar las partes destruidas
+        platformParts.Clear();
+        platPartsDestroyed.Clear();
+
+        // Agregar de nuevo todas las partes de la plataforma
+        for (int i = 0; i < transform.childCount; i++)
+        {
+            platformParts.Add(transform.GetChild(i));
+            platformParts[i].GetComponent<Rigidbody>().velocity = Vector3.zero;
+            platformParts[i].transform.position = platformPartsOriginalPos[i];
         }
     }
 }
