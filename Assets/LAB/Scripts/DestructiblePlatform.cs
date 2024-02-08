@@ -33,6 +33,8 @@ public class DestructiblePlatform : MonoBehaviour
     [SerializeField] private float dispDurationToOrigin = 2.0f;
     [SerializeField] private float waitTimeToMoveToFinal = 3.0f;
     [SerializeField] private float waitTimeToMoveToOrigin = 3.0f;
+    private float originalWaitTimeToMoveToFinal;
+    private float originalWaitTimeToMoveToOrigin;
     [SerializeField] private PlatformState platformState;
     private bool touchedByPlayer = false;
     private bool touchedByOgre = false;
@@ -130,8 +132,11 @@ public class DestructiblePlatform : MonoBehaviour
         oPos = transform.position;
         elapsedTime = 0.0f;
         platformState = PlatformState.WAITINGONORIGIN;
-
         destructionState = DestructionState.NONE;
+        
+        // Almacenar los valores originales de los tiempos de espera
+        originalWaitTimeToMoveToFinal = waitTimeToMoveToFinal;
+        originalWaitTimeToMoveToOrigin = waitTimeToMoveToOrigin;
 
         platformParts.Clear();
         platformPartsOriginalPos = new List<Vector3>();
@@ -159,7 +164,10 @@ public class DestructiblePlatform : MonoBehaviour
 
             case PlatformState.WAITINGONORIGIN:
                 if (!isLavaPlatform) { platformState = PlatformState.TOFINAL; }
-                else { PlatformWaitingToBeMoved(ref waitTimeToMoveToFinal); }
+                else { 
+                    PlatformWaitingToBeMoved(ref waitTimeToMoveToFinal);
+                    if (!destroying) { destructionState = DestructionState.NONE; }
+                }
                 break;
 
             case PlatformState.WAITINGONFINAL:
@@ -301,11 +309,18 @@ public class DestructiblePlatform : MonoBehaviour
 
     private void RecoverPlatform()
     {
-        platformState = PlatformState.TOORIGIN; // Asegurarse de que la plataforma regrese a su posición original
-        destructionState = DestructionState.NONE;
-
         // Restaurar la posición original de la plataforma
         transform.position = oPos;
+
+        // Restablecer los estados y tiempos de espera
+        elapsedTime = 0.0f;
+        destructionElapsedTime = 0.0f;
+        platformState = PlatformState.WAITINGONORIGIN;
+        lavaPlatformActivated = false;
+
+        // Restaurar los tiempos de espera originales
+        waitTimeToMoveToFinal = originalWaitTimeToMoveToFinal;
+        waitTimeToMoveToOrigin = originalWaitTimeToMoveToOrigin;
 
         // Limpiar las partes destruidas
         platformParts.Clear();
