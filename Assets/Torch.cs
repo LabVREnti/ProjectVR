@@ -7,9 +7,13 @@ public class Torch : MonoBehaviour
     [SerializeField] GameObject fire;
     float timer = 0;
 
-    private void OnParticleTrigger()
+
+    private void OnTriggerEnter(Collider other)
     {
-        setFire(true);
+        if (other.gameObject.layer == 12) //Torch
+        {
+            setFire(true);
+        }
     }
     private void Update()
     {
