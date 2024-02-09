@@ -18,11 +18,11 @@ public class moveEnemy : MonoBehaviour
     Rigidbody rb;
     private void Start()
     {
-       // anim = GetComponent<Animator>();
+        anim = GetComponent<Animator>();
         player = FindAnyObjectByType<playerController>().GetComponent<Transform>();
         agent = GetComponent<NavMeshAgent>();
         rb = GetComponent<Rigidbody>();
-        follow = true;
+        follow = false;
         stunned = false;
     }
     void Update()
@@ -32,14 +32,14 @@ public class moveEnemy : MonoBehaviour
             follow = false;
             rb.velocity = Vector3.zero;
             timer -= Time.deltaTime;
-           // anim.SetBool("Die", true);
+            anim.SetBool("Die", true);
 
             if (timer <= 0.0f) { 
                 follow = true;
                 timer = 3.0f;
                 stunned = false;
-           //     anim.SetBool("Die", false);
-             //   anim.SetBool("Walk", true);
+                anim.SetBool("Die", false);
+                anim.SetBool("Walk", true);
             }
             Debug.Log("stunneado");
         }
@@ -48,26 +48,24 @@ public class moveEnemy : MonoBehaviour
         if (follow)
         {
             agent.SetDestination(player.transform.position);
-         //   anim.SetBool("Walk", true);
+            anim.SetBool("Walk", true);
         }
 
         if (followAlways)
         {    
             agent.SetDestination(player.transform.position);
-          //  anim.SetBool("Walk", true);       
+            anim.SetBool("Walk", true);       
         }
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (follow)
+        if (other.CompareTag("Player"))
         {
-            if (other.CompareTag("Player"))
-            {
-                agent.SetDestination(other.transform.position);
-            //    anim.SetBool("Walk", true);
-            }
-        }
+            follow = true;
+            //setfollow true huevona
+            anim.SetBool("Walk", true);
+        } 
     }
     private void OnTriggerExit(Collider other)
     {

@@ -1,25 +1,49 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
+[System.Serializable] public struct controller{
+    public Controller trigger;
+    public bool condition;
 
+}
 public class followController : MonoBehaviour
 {
-    public followController[] triggers;
+    public controller[] triggers;
 
-    [SerializeField] moveEnemy ogre;
+    moveEnemy ogre;
+    public bool follow = false;
+
+    private void Start()
+    {
+        ogre = FindAnyObjectByType<moveEnemy>();
+    }
+
+}
+
+public class Controller : MonoBehaviour
+{
+    public bool c;
+    Controller(bool condition)
+    {
+        c = condition;
+    }
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player"))
-        {
-            ogre.SetFollow(true);
+        if (other.gameObject.CompareTag("Player")){
+            if (c)
+            {
+              //  ogre.SetFollow(c);
+            }
+            else
+            {
+              //  ogre.SetFollow(c);
+            }
         }
     }
 
-    private void OnTriggerExit(Collider other)
+    public void GetC()
     {
-        if (other.CompareTag("Player"))
-        {
-            ogre.SetFollow(false);
-        }
+
     }
 }
