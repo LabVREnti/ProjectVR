@@ -5,34 +5,41 @@ using UnityEngine.AI;
 
 public class moveEnemy : MonoBehaviour
 {
-    public NavMeshAgent agent;
-    [SerializeField] Transform player;
+    NavMeshAgent agent;
+    Transform player;
 
     [SerializeField] bool followAlways;
-    bool follow = false;
-    bool stunned = false;
+    bool follow;
+    bool stunned;
 
     float timer = 3.0f;
 
     Animator anim;
-
+    Rigidbody rb;
     private void Start()
     {
-        anim = GetComponent<Animator>();
+       // anim = GetComponent<Animator>();
+        player = FindAnyObjectByType<playerController>().GetComponent<Transform>();
+        agent = GetComponent<NavMeshAgent>();
+        rb = GetComponent<Rigidbody>();
+        follow = true;
+        stunned = false;
     }
     void Update()
     {
         if(stunned)
         {
             follow = false;
+            rb.velocity = Vector3.zero;
             timer -= Time.deltaTime;
-            anim.SetBool("Die", true);
+           // anim.SetBool("Die", true);
 
             if (timer <= 0.0f) { 
                 follow = true;
                 timer = 3.0f;
                 stunned = false;
-                anim.SetBool("Walk", true);
+           //     anim.SetBool("Die", false);
+             //   anim.SetBool("Walk", true);
             }
             Debug.Log("stunneado");
         }
@@ -41,28 +48,33 @@ public class moveEnemy : MonoBehaviour
         if (follow)
         {
             agent.SetDestination(player.transform.position);
-            anim.SetBool("Walk", true);
+         //   anim.SetBool("Walk", true);
         }
 
         if (followAlways)
-        {
-           
+        {    
             agent.SetDestination(player.transform.position);
-            anim.SetBool("Walk", true);
-            
+          //  anim.SetBool("Walk", true);       
         }
     }
 
-    private void OnTriggerStay(Collider other)
+    private void OnTriggerEnter(Collider other)
     {
-      /*  if (followAlways)
+        if (follow)
         {
             if (other.CompareTag("Player"))
             {
                 agent.SetDestination(other.transform.position);
-                anim.SetBool("Walk", true);
+            //    anim.SetBool("Walk", true);
             }
-        }*/
+        }
+    }
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            follow = false;
+        }
     }
 
     private void OnCollisionEnter(Collision collision)
