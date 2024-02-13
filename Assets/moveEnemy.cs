@@ -9,6 +9,7 @@ public class moveEnemy : MonoBehaviour
     Transform player;
 
     [SerializeField] bool followAlways;
+    [SerializeField] bool followByCloseness;
     bool follow;
     bool stunned;
 
@@ -62,16 +63,22 @@ public class moveEnemy : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            follow = true;
-            //setfollow true huevona
-            anim.SetBool("Walk", true);
+            if (followByCloseness)
+            {
+                follow = true;
+                //setfollow true huevona
+                anim.SetBool("Walk", true);
+            }
         } 
     }
     private void OnTriggerExit(Collider other)
     {
         if (other.CompareTag("Player"))
         {
-            follow = false;
+            if (followByCloseness)
+            {
+                follow = false;
+            }
         }
     }
 
