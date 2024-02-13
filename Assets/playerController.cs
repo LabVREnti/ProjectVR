@@ -26,8 +26,8 @@ public class playerController : MonoBehaviour
             ogre.SetFollow(false);
 
             //Respawn player and ogre
-            manager.SetRespawnObject(this.gameObject, respawn);
-            manager.SetRespawnObject(collision.gameObject, new Vector3(3.6f, 1.0f, -15.0f));
+          //  manager.SetRespawnObject(this.gameObject, respawn);
+          //  manager.SetRespawnObject(collision.gameObject, new Vector3(1.036f, -3.41f, 0f));
 
         }
     }
