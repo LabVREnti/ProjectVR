@@ -3023,7 +3023,7 @@ MonoBehaviour:
   dispDurationToFinal: 10
   dispDurationToOrigin: 2
   waitTimeToMoveToFinal: 3
-  waitTimeToMoveToOrigin: 3
+  waitTimeToMoveToOrigin: 10
   platformState: 0
   predictionColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   destroying: 0
