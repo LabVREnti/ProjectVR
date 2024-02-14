@@ -23,7 +23,7 @@ public class playerController : MonoBehaviour
         {
             // Reset ogre stateFollow
             
-            ogre.SetFollow(false);
+          //  ogre.SetFollow(false);
 
             //Respawn player and ogre
           //  manager.SetRespawnObject(this.gameObject, respawn);

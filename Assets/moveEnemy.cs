@@ -9,7 +9,7 @@ public class moveEnemy : MonoBehaviour
     Transform player;
 
     [SerializeField] bool followAlways;
-    [SerializeField] bool followByCloseness;
+   // [SerializeField] bool followByCloseness;
     bool follow;
     bool stunned;
 
@@ -33,14 +33,15 @@ public class moveEnemy : MonoBehaviour
             follow = false;
             rb.velocity = Vector3.zero;
             timer -= Time.deltaTime;
+            anim.SetBool("Walk", false);
             anim.SetBool("Die", true);
 
             if (timer <= 0.0f) { 
-                follow = true;
-                timer = 3.0f;
-                stunned = false;
                 anim.SetBool("Die", false);
                 anim.SetBool("Walk", true);
+                timer = 3.0f;
+                stunned = false;
+                follow = true;
             }
             Debug.Log("stunneado");
         }
@@ -63,22 +64,22 @@ public class moveEnemy : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            if (followByCloseness)
-            {
+          //  if (followByCloseness)
+          //  {
                 follow = true;
                 //setfollow true huevona
                 anim.SetBool("Walk", true);
-            }
+          //  }
         } 
     }
     private void OnTriggerExit(Collider other)
     {
         if (other.CompareTag("Player"))
         {
-            if (followByCloseness)
-            {
+          //  if (followByCloseness)
+         //   {
                 follow = false;
-            }
+         //   }
         }
     }
 
@@ -87,8 +88,8 @@ public class moveEnemy : MonoBehaviour
         if (collision.gameObject.CompareTag("Torch"))
         {
             // Play sonido de hacer daño al ogro y animacion daño ogro
-            stunned = true;
             Debug.Log("te he pegado");
+            stunned = true;
         }
 
     }
