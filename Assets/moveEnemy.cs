@@ -7,13 +7,14 @@ public class moveEnemy : MonoBehaviour
 {
     NavMeshAgent agent;
     Transform player;
+    CapsuleCollider col;
 
     [SerializeField] bool followAlways;
    // [SerializeField] bool followByCloseness;
     bool follow;
-    bool stunned;
+   [SerializeField] bool stunned;
 
-    float timer = 3.0f;
+    float timer = 4.0f;
 
     Animator anim;
     Rigidbody rb;
@@ -23,6 +24,7 @@ public class moveEnemy : MonoBehaviour
         player = FindAnyObjectByType<playerController>().GetComponent<Transform>();
         agent = GetComponent<NavMeshAgent>();
         rb = GetComponent<Rigidbody>();
+        col = GetComponent<CapsuleCollider>();
         follow = false;
         stunned = false;
     }
@@ -35,13 +37,20 @@ public class moveEnemy : MonoBehaviour
             timer -= Time.deltaTime;
             anim.SetBool("Walk", false);
             anim.SetBool("Die", true);
+            agent.enabled = false;
 
-            if (timer <= 0.0f) { 
+            if (timer <= 2.0f) { 
+               
                 anim.SetBool("Die", false);
                 anim.SetBool("Walk", true);
-                timer = 3.0f;
-                stunned = false;
-                follow = true;
+
+                if (timer <= 0.0f)
+                {
+                    timer = 4.0f;
+                    agent.enabled = true;
+                    stunned = false;
+                    follow = true;
+                }
             }
             Debug.Log("stunneado");
         }
