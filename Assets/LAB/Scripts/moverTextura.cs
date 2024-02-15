@@ -2,17 +2,24 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class moverTextura : MonoBehaviour
+public class MoverTextura : MonoBehaviour
 {
-    // Start is called before the first frame update
+    public float velocidadX = 0.1f; // Velocidad de movimiento en el eje X
+    public float velocidadY = 0.1f; // Velocidad de movimiento en el eje Y
+
+    Renderer rend;
+    float offsetX = 0f;
+    float offsetY = 0f;
+
     void Start()
     {
-        
+        rend = GetComponent<Renderer>();
     }
 
-    // Update is called once per frame
     void Update()
     {
-        
+        offsetX += velocidadX * Time.deltaTime;
+        offsetY += velocidadY * Time.deltaTime;
+        rend.material.mainTextureOffset = new Vector2(offsetX, offsetY);
     }
 }

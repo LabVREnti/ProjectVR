@@ -6584,6 +6584,7 @@ GameObject:
   - component: {fileID: 908120332}
   - component: {fileID: 908120331}
   - component: {fileID: 908120330}
+  - component: {fileID: 908120333}
   m_Layer: 0
   m_Name: Lava
   m_TagString: Untagged
@@ -6677,6 +6678,20 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 908120327}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &908120333
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 908120327}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: df5e2a2a82c29d8438ca0823542ebdde, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  velocidadX: -0.01
+  velocidadY: -0.01
 --- !u!1001 &918482407
 PrefabInstance:
   m_ObjectHideFlags: 0
