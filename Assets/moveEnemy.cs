@@ -7,22 +7,25 @@ public class moveEnemy : MonoBehaviour
 {
     NavMeshAgent agent;
     Transform player;
+    CapsuleCollider col;
 
     [SerializeField] bool followAlways;
+   // [SerializeField] bool followByCloseness;
     bool follow;
-    bool stunned;
+   [SerializeField] bool stunned;
 
-    float timer = 3.0f;
+    float timer = 4.0f;
 
     Animator anim;
     Rigidbody rb;
     private void Start()
     {
-       // anim = GetComponent<Animator>();
+        anim = GetComponent<Animator>();
         player = FindAnyObjectByType<playerController>().GetComponent<Transform>();
         agent = GetComponent<NavMeshAgent>();
         rb = GetComponent<Rigidbody>();
-        follow = true;
+        col = GetComponent<CapsuleCollider>();
+        follow = false;
         stunned = false;
     }
     void Update()
@@ -32,14 +35,22 @@ public class moveEnemy : MonoBehaviour
             follow = false;
             rb.velocity = Vector3.zero;
             timer -= Time.deltaTime;
-           // anim.SetBool("Die", true);
+            anim.SetBool("Walk", false);
+            anim.SetBool("Die", true);
+            agent.enabled = false;
 
-            if (timer <= 0.0f) { 
-                follow = true;
-                timer = 3.0f;
-                stunned = false;
-           //     anim.SetBool("Die", false);
-             //   anim.SetBool("Walk", true);
+            if (timer <= 2.0f) { 
+               
+                anim.SetBool("Die", false);
+                anim.SetBool("Walk", true);
+
+                if (timer <= 0.0f)
+                {
+                    timer = 4.0f;
+                    agent.enabled = true;
+                    stunned = false;
+                    follow = true;
+                }
             }
             Debug.Log("stunneado");
         }
@@ -48,32 +59,36 @@ public class moveEnemy : MonoBehaviour
         if (follow)
         {
             agent.SetDestination(player.transform.position);
-         //   anim.SetBool("Walk", true);
+            anim.SetBool("Walk", true);
         }
 
         if (followAlways)
         {    
             agent.SetDestination(player.transform.position);
-          //  anim.SetBool("Walk", true);       
+            anim.SetBool("Walk", true);       
         }
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (follow)
+        if (other.CompareTag("Player"))
         {
-            if (other.CompareTag("Player"))
-            {
-                agent.SetDestination(other.transform.position);
-            //    anim.SetBool("Walk", true);
-            }
-        }
+          //  if (followByCloseness)
+          //  {
+                follow = true;
+                //setfollow true huevona
+                anim.SetBool("Walk", true);
+          //  }
+        } 
     }
     private void OnTriggerExit(Collider other)
     {
         if (other.CompareTag("Player"))
         {
-            follow = false;
+          //  if (followByCloseness)
+         //   {
+                follow = false;
+         //   }
         }
     }
 
@@ -82,8 +97,8 @@ public class moveEnemy : MonoBehaviour
         if (collision.gameObject.CompareTag("Torch"))
         {
             // Play sonido de hacer daño al ogro y animacion daño ogro
-            stunned = true;
             Debug.Log("te he pegado");
+            stunned = true;
         }
 
     }
