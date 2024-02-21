@@ -11,7 +11,8 @@ public class ChangeZone : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Player"))
         {
-            SceneManager.LoadScene(sceneToLoad,LoadSceneMode.Additive);
+            SceneManager.LoadScene(sceneToLoad);
+            Destroy(gameObject);
         }
     }
 }

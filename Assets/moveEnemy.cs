@@ -52,9 +52,10 @@ public class moveEnemy : MonoBehaviour
                     follow = true;
                 }
             }
-            Debug.Log("stunneado");
+          //  Debug.Log("stunneado");
         }
-        else { Debug.Log("vuelta al follow"); }
+        else {// Debug.Log("vuelta al follow");
+              }
 
         if (follow)
         {
