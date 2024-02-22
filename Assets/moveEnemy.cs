@@ -86,10 +86,7 @@ public class moveEnemy : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-          //  if (followByCloseness)
-         //   {
-                follow = false;
-         //   }
+            follow = false;      
         }
     }
 
