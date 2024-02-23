@@ -699,6 +699,11 @@ namespace Autohand {
             pose.GetHandPoseData(this).SetPose(this, null);
         }
 
+        public void SetEnableMovement(bool condition)
+        {
+            enableMovement = condition;
+        }
+
         /// <summary>Takes a new pose and an amount of time and poses the hand</summary>
         public void UpdatePose(HandPoseData pose, float time) {
             if(handAnimateRoutine != null)
