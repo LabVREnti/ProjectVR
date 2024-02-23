@@ -15,7 +15,7 @@ public class playerController : MonoBehaviour
     OmniMovementComponent omni;
     CharacterController cc;
     //********** MOVIMIENTO MANDO
-    [SerializeField] Hand leftHand;
+   // [SerializeField] Hand leftHand;
 
     int duckCount;
 

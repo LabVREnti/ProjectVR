@@ -5,12 +5,14 @@ using UnityEngine.SceneManagement;
 
 public class unloadZone : MonoBehaviour
 {
-    [SerializeField] string sceneToLoad;
+    [SerializeField] string sceneToUnload;
+    [SerializeField] Light directionalLight;
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.CompareTag("Player"))
         {
-            SceneManager.UnloadSceneAsync(sceneToLoad);
+            SceneManager.UnloadSceneAsync(sceneToUnload);
+            directionalLight.gameObject.SetActive(true);
             Destroy(gameObject);
         }
     }
