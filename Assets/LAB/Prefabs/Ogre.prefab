@@ -74,7 +74,7 @@ PrefabInstance:
       addedObject: {fileID: 3347555657644331622}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 48bb3e2db4bbd8a4a9b62e80473d66a5, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 6405355115618830771}
+      addedObject: {fileID: 3465946101985580705}
   m_SourcePrefab: {fileID: 100100000, guid: 48bb3e2db4bbd8a4a9b62e80473d66a5, type: 3}
 --- !u!1 &2191903068204546102 stripped
 GameObject:
@@ -164,10 +164,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 125d514639d53f644a712e69a988ffde, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  agent: {fileID: 6405355115618830771}
-  player: {fileID: 0}
   followAlways: 1
---- !u!195 &6405355115618830771
+  follow: 0
+  stunned: 0
+--- !u!195 &3465946101985580705
 NavMeshAgent:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
