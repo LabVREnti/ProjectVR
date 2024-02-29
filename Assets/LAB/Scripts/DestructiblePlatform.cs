@@ -28,7 +28,7 @@ public class DestructiblePlatform : MonoBehaviour
 
     [Header("Movement")]
     private Vector3 oPos;
-    [SerializeField] private Vector3 fPos;
+    [SerializeField] private Vector3 fPosLocal = new Vector3(0.0f, -8.0f, 0.0f);
     [SerializeField] private float dispDurationToFinal = 2.0f;
     [SerializeField] private float dispDurationToOrigin = 2.0f;
     [SerializeField] private float waitTimeToMoveToFinal = 3.0f;
@@ -40,6 +40,7 @@ public class DestructiblePlatform : MonoBehaviour
     private bool touchedByOgre = false;
     private float elapsedTime = 0.0f;
     private Vector3 prevPos;
+    private AudioSource audioSource;
 
     [Header("Route prediction")]
     [SerializeField] private Color predictionColor = Color.yellow;
@@ -63,7 +64,13 @@ public class DestructiblePlatform : MonoBehaviour
     [SerializeField] private bool isTemporizated = false;
     public float prevPlatDestructionPercentage = 0.85f;
 
-    void Start()
+
+    private void Awake()
+    {
+        audioSource = GetComponent<AudioSource>();
+    }
+
+    private void Start()
     {
         GetPlayerAndOgre();
         InitPlatform();
@@ -118,7 +125,7 @@ public class DestructiblePlatform : MonoBehaviour
     void OnDrawGizmos()
     {
         Gizmos.color = Color.yellow;
-        Gizmos.DrawLine(transform.position, fPos);
+        Gizmos.DrawLine(transform.position, transform.TransformPoint(fPosLocal));
     }
 
     private void GetPlayerAndOgre()
@@ -154,11 +161,12 @@ public class DestructiblePlatform : MonoBehaviour
         switch (platformState)
         {
             case PlatformState.TOFINAL:
-                SlidingMovement(oPos, fPos, dispDurationToFinal);
+                SlidingMovement(oPos, transform.TransformPoint(fPosLocal), dispDurationToFinal); // Convertir fPosLocal a coordenadas mundiales
+                if (audioSource != null) audioSource.Play();
                 break;
 
             case PlatformState.TOORIGIN:
-                SlidingMovement(fPos, oPos, dispDurationToOrigin);
+                SlidingMovement(transform.TransformPoint(fPosLocal), oPos, dispDurationToOrigin); // Convertir fPosLocal a coordenadas mundiales
                 destructionState = DestructionState.DESTROYED;
                 break;
 
