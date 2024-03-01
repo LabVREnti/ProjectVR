@@ -225,6 +225,7 @@ GameObject:
   - component: {fileID: 5150454039702682030}
   - component: {fileID: 2433945745402102857}
   - component: {fileID: 2657325728044769840}
+  - component: {fileID: 9147849491564745259}
   m_Layer: 0
   m_Name: key
   m_TagString: Untagged
@@ -246,7 +247,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 7368347864071167086}
-  m_LocalEulerAnglesHint: {x: 0, y: -17.097, z: 90}
+  m_LocalEulerAnglesHint: {x: 0, y: -17.097, z: 110.830574}
 --- !u!33 &4237394004275770267
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -389,7 +390,19 @@ MonoBehaviour:
   showEvents: 1
   onGrab:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 9147849491564745259}
+        m_TargetAssemblyTypeName: UnityEngine.Behaviour, UnityEngine
+        m_MethodName: set_enabled
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   onRelease:
     m_PersistentCalls:
       m_Calls: []
@@ -527,6 +540,27 @@ MonoBehaviour:
     - {x: 0.03956462, y: -0.362823, z: -0.00011716784, w: 0.9310178}
     - {x: -0.000008029863, y: 0.0000010747461, z: -0.0000007860363, w: 1}
   leftPoseSet: 1
+--- !u!95 &9147849491564745259
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 444225085986137732}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 32db07c2e2fc94d4d8ac35479aa40cb1, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &1030866386085219109
 GameObject:
   m_ObjectHideFlags: 0
