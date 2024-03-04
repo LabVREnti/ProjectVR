@@ -37,6 +37,7 @@ public class moveEnemy : MonoBehaviour
             stunnDelay = true;
             agent.enabled = false;  
             rb.velocity = Vector3.zero;
+            rb.isKinematic = true;
             timer -= Time.deltaTime;
             anim.SetBool("Walk", false);
             anim.SetBool("Die", true);
@@ -47,9 +48,10 @@ public class moveEnemy : MonoBehaviour
                 anim.SetBool("Die", false);
                 anim.SetBool("Walk", true);
 
-                if (timer <= 0.0f)
+                if (timer <= 1.0f)
                 {
                     timer = 4.0f;
+                    rb.isKinematic = false;
                     agent.enabled = true;
                     
                     stunned = false;
