@@ -9,12 +9,12 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5035377126143522508}
+  - component: {fileID: 1075900753307454755}
   - component: {fileID: 847153073280300211}
   - component: {fileID: 2047046295300721557}
   - component: {fileID: 28140912795198353}
-  - component: {fileID: 1075900753307454755}
   m_Layer: 0
-  m_Name: T_MusicTransition
+  m_Name: MusicOffTrigger
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -30,11 +30,25 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -7.88, y: 2.51, z: 10.609}
-  m_LocalScale: {x: 3.2120113, y: 1, z: 1}
+  m_LocalScale: {x: 3.2120113, y: 1, z: 0.034922}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1075900753307454755
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1353638957995308333}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 43e72b8fb536241d8bafb9929539df92, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dungeonBGM: {fileID: 0}
+  thisTriggerPlaysMusic: 0
 --- !u!33 &847153073280300211
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -63,7 +77,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: 5def92ede5ca99043a237e3a03ba1010, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -106,16 +120,3 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &1075900753307454755
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1353638957995308333}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 43e72b8fb536241d8bafb9929539df92, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  dungeonBGM: {fileID: 0}
