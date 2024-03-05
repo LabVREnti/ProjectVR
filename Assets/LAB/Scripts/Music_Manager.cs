@@ -15,8 +15,11 @@ public class MusicManager : MonoBehaviour
 
     private void Awake()
     {
-        audioBGM = dungeonBGM.GetComponent<AudioSource>();
-        initialVolume = audioBGM.volume;
+        if (dungeonBGM != null)
+        {
+            audioBGM = dungeonBGM.GetComponent<AudioSource>();
+            initialVolume = audioBGM.volume;
+        }
     }
 
     private void Update()
@@ -67,6 +70,6 @@ public class MusicManager : MonoBehaviour
 
     private void PlayMusic()
     {
-        if (!audioBGM.isPlaying) audioBGM.Play();
+        if (audioBGM != null && !audioBGM.isPlaying) audioBGM.Play();
     }
 }

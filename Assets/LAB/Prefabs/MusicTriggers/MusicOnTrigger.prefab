@@ -49,6 +49,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dungeonBGM: {fileID: 0}
   thisTriggerPlaysMusic: 1
+  fadeDuration: 2
 --- !u!33 &847153073280300211
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -64,7 +65,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1353638957995308333}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
