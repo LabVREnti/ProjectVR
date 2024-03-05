@@ -7,39 +7,32 @@ public class playerController : MonoBehaviour
 {
     [SerializeField] Vector3 respawn;
 
-    private Manager manager;
     private moveEnemy ogre;
 
     //********** MOVIMIENTO PLATAFORMA
     [SerializeField] bool omniMovement;
     OmniMovementComponent omni;
     CharacterController cc;
-    //********** MOVIMIENTO MANDO
-   // [SerializeField] Hand leftHand;
 
-    int duckCount;
+    //********** MOVIMIENTO MANDO
+    // [SerializeField] Hand leftHand;
+
+    string key;
 
     private void Start()
     {
-        duckCount = 0;
         omni = GetComponent<OmniMovementComponent>();
         cc = GetComponent<CharacterController>();   
-        manager = FindObjectOfType<Manager>();
         ogre  = FindObjectOfType<moveEnemy>();
     }
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.CompareTag("Ogre"))
         {
-            // Reset ogre stateFollow
             
-          //  ogre.SetFollow(false);
-
-            //Respawn player and ogre
-          //  manager.SetRespawnObject(this.gameObject, respawn);
-          //  manager.SetRespawnObject(collision.gameObject, new Vector3(1.036f, -3.41f, 0f));
 
         }
+        
     }
 
     private void Update()
@@ -52,10 +45,11 @@ public class playerController : MonoBehaviour
 
        // leftHand.SetEnableMovement(false);
 
-        if(duckCount == 5)
-        {
-            Debug.Log("TODOS LOS PATITOS");
-        }
+    }
+
+    public void AddKey(int keyNum, bool updateTo)
+    {
+      //  KeyManager.Instance.UpdateKeys(keyNum, updateTo);
     }
 
     void UseOmniInputToMovePlayer()
@@ -72,8 +66,4 @@ public class playerController : MonoBehaviour
             cc.Move(omni.GetStrafeMovement());
     }
 
-    public void AddDuck()
-    {
-        duckCount++;
-    }
 }

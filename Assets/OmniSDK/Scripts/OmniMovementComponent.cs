@@ -33,7 +33,7 @@ public class OmniMovementComponent : MonoBehaviour {
     [HideInInspector]
     [Range(0.0f, 1.0f)]
     [Tooltip("Fully coupled to camera = 100%, Fully decoupled (follows torso/ring angle = 0%.")]
-    public float couplingPercentage = 1.0f;
+    public float couplingPercentage = 0f;
 
     [Tooltip("Set to True if you want to use a joystick or WASD for testing instead of the Omni and no HMD. Please uncheck when you do a full build for release.")]
     public bool developerMode = false;

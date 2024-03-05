@@ -24,7 +24,7 @@ public class duck : MonoBehaviour
     public void GrabDuck()
     {
         //Playear el sonido
-        player.AddDuck();
+      
         this.gameObject.SetActive(false);
     }
 }
