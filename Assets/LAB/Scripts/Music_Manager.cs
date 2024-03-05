@@ -29,47 +29,48 @@ public class MusicManager : MonoBehaviour
             if (fading)
             {
                 float elapsedTime = Time.time - fadeStartTime;
-                float fadeRatio = 1 - Mathf.Clamp01(elapsedTime / fadeDuration);
-
-                audioBGM.volume = initialVolume * fadeRatio;
-
-                if (fadeRatio <= 0)
+                if (!thisTriggerPlaysMusic)
                 {
-                    audioBGM.Stop();
-                    fading = false;
+                    float fadeRatio = 1 - Mathf.Clamp01(elapsedTime / fadeDuration);
+                    audioBGM.volume = initialVolume * fadeRatio;
+
+                    if (fadeRatio <= 0)
+                    {
+                        audioBGM.Stop();
+                        fading = false;
+                    }
+                }
+
+                else
+                {
+                    float fadeRatio = Mathf.Clamp01(elapsedTime / fadeDuration);
+                    audioBGM.volume = initialVolume * fadeRatio;
+
+                    if (fadeRatio >= 1)
+                    {
+                        if (!audioBGM.isPlaying) audioBGM.Play();
+                        fading = false;
+                    }
                 }
             }
         }
     }
 
-    private void OnTriggerEnter(Collider collider)
+    private void OnTriggerEnter(Collider other)
     {
-        if (collider.gameObject.CompareTag("Player"))
+        if (!other.gameObject.CompareTag("Player")) ;
+        else
         {
-            if (thisTriggerPlaysMusic)
-            {
-                PlayMusic();
-            }
-            else StopMusic();
+            StartFade();
         }
     }
 
-    public void StartFadeOut()
+    public void StartFade()
     {
         if (audioBGM != null && !fading)
         {
             fadeStartTime = Time.time;
             fading = true;
         }
-    }
-
-    private void StopMusic()
-    {
-        StartFadeOut();
-    }
-
-    private void PlayMusic()
-    {
-        if (audioBGM != null && !audioBGM.isPlaying) audioBGM.Play();
     }
 }
