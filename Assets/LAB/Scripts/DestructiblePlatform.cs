@@ -162,7 +162,7 @@ public class DestructiblePlatform : MonoBehaviour
         {
             case PlatformState.TOFINAL:
                 SlidingMovement(oPos, transform.TransformPoint(fPosLocal), dispDurationToFinal); // Convertir fPosLocal a coordenadas mundiales
-                if (audioSource != null) audioSource.Play();
+                if (audioSource != null && audioSource != audioSource.isPlaying) audioSource.Play();
                 break;
 
             case PlatformState.TOORIGIN:
@@ -317,7 +317,7 @@ public class DestructiblePlatform : MonoBehaviour
 
     private void RecoverPlatform()
     {
-        // Restaurar la posición original de la plataforma
+        // Restaurar la posici?n original de la plataforma
         transform.position = oPos;
 
         // Restablecer los estados y tiempos de espera

@@ -5434,7 +5434,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isLavaPlatform: 1
   lavaPlatformActivated: 0
-  fPos: {x: 0, y: -3, z: 0}
+  fPosLocal: {x: 0, y: -8, z: 0}
   dispDurationToFinal: 10
   dispDurationToOrigin: 2
   waitTimeToMoveToFinal: 3
@@ -5465,7 +5465,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: cd50f62ca681d45af827aaa31d7c0c6b, type: 3}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 0
