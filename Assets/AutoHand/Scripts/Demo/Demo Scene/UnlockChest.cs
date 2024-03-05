@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace Autohand.Demo
 {
@@ -9,6 +10,8 @@ namespace Autohand.Demo
         public PlacePoint placePoint;
 
         public HingeJoint joint;
+
+        public UnityEvent OtherUnlockFunctions;
 
         public void Start()
         {
@@ -29,7 +32,9 @@ namespace Autohand.Demo
                 max = 160
             };
             joint.spring = new JointSpring() { spring = 5, targetPosition = 160 };
+
         }
+
 
         public void Lock()
         {
@@ -41,6 +46,11 @@ namespace Autohand.Demo
                 min = -2,
                 max = 2
             };
+        }
+
+        public void CallOtherFunctions()
+        {
+            OtherUnlockFunctions.Invoke();
         }
     }
 }

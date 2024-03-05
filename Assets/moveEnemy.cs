@@ -11,8 +11,9 @@ public class moveEnemy : MonoBehaviour
 
     [SerializeField] bool followAlways;
    // [SerializeField] bool followByCloseness;
-    bool follow;
+   [SerializeField] bool follow;
    [SerializeField] bool stunned;
+    bool stunnDelay;
 
     float timer = 4.0f;
 
@@ -33,26 +34,32 @@ public class moveEnemy : MonoBehaviour
         if(stunned)
         {
             follow = false;
+            stunnDelay = true;
+            agent.enabled = false;  
             rb.velocity = Vector3.zero;
+            rb.isKinematic = true;
             timer -= Time.deltaTime;
             anim.SetBool("Walk", false);
             anim.SetBool("Die", true);
-            agent.enabled = false;
+           
 
             if (timer <= 2.0f) { 
                
                 anim.SetBool("Die", false);
                 anim.SetBool("Walk", true);
 
-                if (timer <= 0.0f)
+                if (timer <= 1.0f)
                 {
                     timer = 4.0f;
+                    rb.isKinematic = false;
                     agent.enabled = true;
+                    
                     stunned = false;
+                    stunnDelay = false;
                     follow = true;
                 }
             }
-          //  Debug.Log("stunneado");
+            Debug.Log("stunneado");
         }
         else {// Debug.Log("vuelta al follow");
               }
@@ -96,7 +103,11 @@ public class moveEnemy : MonoBehaviour
         {
             // Play sonido de hacer daño al ogro y animacion daño ogro
             Debug.Log("te he pegado");
-            stunned = true;
+            if (!stunnDelay)
+            {
+                agent.isStopped = true;
+                stunned = true;
+            }
         }
 
     }
