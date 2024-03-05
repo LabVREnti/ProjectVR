@@ -1,6 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class MusicManager : MonoBehaviour
@@ -18,54 +16,43 @@ public class MusicManager : MonoBehaviour
         if (dungeonBGM != null)
         {
             audioBGM = dungeonBGM.GetComponent<AudioSource>();
-            initialVolume = audioBGM.volume;
+            if (audioBGM != null)
+            {
+                initialVolume = audioBGM.volume;
+            }
         }
     }
 
     private void Update()
     {
-        if (audioBGM != null)
+        if (audioBGM != null && fading)
         {
-            if (fading)
+            float elapsedTime = Time.time - fadeStartTime;
+            float fadeRatio = thisTriggerPlaysMusic ? elapsedTime / fadeDuration : 1 - (elapsedTime / fadeDuration);
+            audioBGM.volume = Mathf.Lerp(0, initialVolume, fadeRatio);
+
+            if (thisTriggerPlaysMusic && !audioBGM.isPlaying) audioBGM.Play();
+
+            if (fadeRatio is >= 1 or <= 0)
             {
-                float elapsedTime = Time.time - fadeStartTime;
                 if (!thisTriggerPlaysMusic)
                 {
-                    float fadeRatio = 1 - Mathf.Clamp01(elapsedTime / fadeDuration);
-                    audioBGM.volume = initialVolume * fadeRatio;
-
-                    if (fadeRatio <= 0)
-                    {
-                        audioBGM.Stop();
-                        fading = false;
-                    }
+                    audioBGM.Stop();
                 }
-
-                else
-                {
-                    float fadeRatio = Mathf.Clamp01(elapsedTime / fadeDuration);
-                    audioBGM.volume = initialVolume * fadeRatio;
-
-                    if (fadeRatio >= 1)
-                    {
-                        if (!audioBGM.isPlaying) audioBGM.Play();
-                        fading = false;
-                    }
-                }
+                fading = false;
             }
         }
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (!other.gameObject.CompareTag("Player")) ;
-        else
+        if (other.gameObject.CompareTag("Player"))
         {
             StartFade();
         }
     }
 
-    public void StartFade()
+    private void StartFade()
     {
         if (audioBGM != null && !fading)
         {
