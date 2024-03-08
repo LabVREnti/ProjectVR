@@ -6,13 +6,13 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 0
-    path: Assets/LAB/Scenes/SampleScene.unity
+    path: Assets/LAB/Scenes/TestScenes/SampleScene.unity
     guid: 9fc0d4010bbf28b4594072e72b8655ab
   - enabled: 0
-    path: Assets/LAB/Scenes/MazeExample.unity
+    path: Assets/LAB/Scenes/TestScenes/MazeExample.unity
     guid: 7bf404f5683e56b4da69d4efff2d977d
   - enabled: 1
-    path: Assets/LAB/Scenes/Nexus/Nexus.unity
+    path: Assets/LAB/Scenes/Nexus/Nexus(old).unity
     guid: ab16a1c443b7f16458386746bce8111f
   - enabled: 1
     path: Assets/LAB/Scenes/1st Zone/LavaZone.unity
