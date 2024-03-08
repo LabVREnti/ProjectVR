@@ -8,6 +8,7 @@ TagManager:
   - CinemachineTarget
   - Torch
   - Duck
+  - Floor
   layers:
   - Default
   - TransparentFX
