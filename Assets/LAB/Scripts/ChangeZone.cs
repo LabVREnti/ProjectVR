@@ -14,8 +14,8 @@ public class ChangeZone : MonoBehaviour
         if (other.gameObject.CompareTag("Player"))
         {
             UnityEngine.SceneManagement.Scene scene = SceneManager.GetSceneByName(sceneToLoad);
-            SceneManager.LoadScene(sceneToLoad, LoadSceneMode.Additive);
-            Destroy(gameObject);
+            SceneManager.LoadScene(sceneToLoad);
+           // Destroy(gameObject);
         }
     }
 }
