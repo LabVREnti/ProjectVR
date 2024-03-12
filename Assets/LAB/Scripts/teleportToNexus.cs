@@ -5,15 +5,22 @@ using UnityEngine.SceneManagement;
 
 public class teleportToNexus : MonoBehaviour
 {
-    public string sceneName = "Nexus"; // Nombre de la escena a la que quieres cambiar
-    public float secondsToWait = 3f; // Tiempo de espera para cambiar de escena
-    public Vector3 spawnPosition = new Vector3(-0.496f, 1.45f, -0.21f); // La posición de aparición en la nueva escena
-    public Quaternion spawnRotation = new Quaternion(); // La rotación en la nueva escena
+    [SerializeField] private string sceneName = "Nexus"; // Nombre de la escena a la que quieres cambiar
+    [SerializeField] private float secondsToWait = 3f; // Tiempo de espera para cambiar de escena
+    [SerializeField] private Vector3 spawnPosition = new Vector3(-0.496f, 1.45f, -0.21f); // La posición de aparición en la nueva escena
+    [SerializeField] private Quaternion spawnRotation = new Quaternion(); // La rotación en la nueva escena
+    [SerializeField] private AudioSource TPSound;
+
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
         {
+            if (!TPSound.isPlaying)
+            {
+                TPSound.Play();
+            }
+
             // Inicia la coroutine para esperar antes de cambiar de escena
             StartCoroutine(WaitAndLoadScene());
         }
