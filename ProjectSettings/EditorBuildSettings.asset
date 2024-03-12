@@ -6,11 +6,11 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/LAB/Scenes/1st Zone/LavaZone.unity
-    guid: e90d8363ca3869845bd8556be82d146c
-  - enabled: 1
     path: Assets/LAB/Scenes/Nexus/Nexus.unity
     guid: d95e5445da2b6464abea263264f02ef9
+  - enabled: 1
+    path: Assets/LAB/Scenes/1st Zone/LavaZone.unity
+    guid: e90d8363ca3869845bd8556be82d146c
   m_configObjects:
     Unity.XR.Oculus.Settings: {fileID: 11400000, guid: 13cd70cdaa8670048bd74189f4ace1aa, type: 2}
     com.unity.xr.management.loader_settings: {fileID: 11400000, guid: c6d1e4b8034b9664988fd009b3e5cb89, type: 2}
