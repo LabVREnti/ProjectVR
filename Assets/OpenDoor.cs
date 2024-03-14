@@ -18,7 +18,7 @@ public class OpenDoor : MonoBehaviour
         openDoor = true;
         if (!doorSound.isPlaying)
         {
-            Invoke("OpenDoorSound", 2.5f);
+            Invoke("OpenDoorSound", 0f);
         }
     }
 
@@ -26,7 +26,7 @@ public class OpenDoor : MonoBehaviour
     {
         if (openDoor)
         {
-            door.transform.position = Vector3.MoveTowards(door.transform.position, openPoint.position, Time.deltaTime * 0.3f);
+            door.transform.position = Vector3.MoveTowards(door.transform.position, openPoint.position, Time.deltaTime * 0.5f);
             tpTrigger.SetActive(true);
         }
     }
