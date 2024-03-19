@@ -43,7 +43,9 @@ public class playerController : MonoBehaviour
             UseOmniInputToMovePlayer();
         }
 
-       // leftHand.SetEnableMovement(false);
+        // leftHand.SetEnableMovement(false);
+
+        Debug.Log(omni.couplingPercentage);
 
     }
 
@@ -55,7 +57,10 @@ public class playerController : MonoBehaviour
     void UseOmniInputToMovePlayer()
     {
         if (omni.omniFound)
+        {
             omni.GetOmniInputForCharacterMovement();
+            omni.couplingPercentage = 0f;
+        }
         else if (omni.developerMode)
             omni.DeveloperModeUpdate();
 
